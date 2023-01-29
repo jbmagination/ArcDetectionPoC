@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Arc browser detection</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        :root {
+            color-scheme: light dark;
+        }
+        * {
+            font-family: Helvetica;
+        }
+        .detected {
+            color: red;
+        }
+        .not-detected {
+            color: green;
+        }
+        @media (prefers-color-scheme: dark) {
+            .not-detected {
+                color: lime;
+            }
+        }
+        body {
+            padding-left: 5px;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Arc browser detection</h1>
+        <p><div id="arc-detection">Loading... <noscript>(This requires JavaScript)</noscript></div></p>
+        <p><div id="little-arc-detection">Loading... <noscript>(This requires JavaScript)</noscript></div></p>
+        <h2>How does this work?</h2>
+        <p>Arc has a setting under <i>Advanced</i> > <i>Allow website to get your theme data</i>. This setting is on by default. This is used to detect Arc.</p>
+        <p>The Little Arc detection is similar, except it actually gets the values of the theme data and compares it with what is expected from Little Arc.</p>
+        <h2>Should I be worried about this?</h2>
+        <p>Most likely not - but if you're paranoid about it, or know who you are, it doesn't hurt to disable the setting.</p>
+        <h2>How do I turn off this setting / how can I not be detected?</h2>
+        <p>To avoid being detected in a regular Arc window, go to <i>Advanced</i> in Arc's settings menu, then disable <i>Allow website to get your theme data</i>:</p>
+        <p><img src="./settings.png" width="75%"></img></p>
+        <p>However, <b>as of Arc 0.87.0 (36910),</b> your setting is not respected in Little Arc windows, and in this case Arc (as well as Little Arc itself) can always be detected:</p>
+        <p><img src="./little-arc.png" width="75%"></img></p>
+        <p>This is likely a bug - I've reported it to The Browser Company.</p>
+        <script>
+            async function detectArc() {
+                let arcFound;
+                counter = counter + 1;
+
+                // UA / JavaScript detection to block other major Chromium-based browsers
+                const operaUA = window.navigator.userAgent.indexOf("OPR") > -1 || window.navigator.userAgent.indexOf("Opera") > -1;
+                const edgeUA = window.navigator.userAgent.indexOf("Edg") > -1
+                const braveJS = navigator.brave && navigator.brave.isBrave();
+                
+                // Chrome detection is slightly more complicated (but doable!)
+                let chromeUA;
+                if (navigator.userAgentData) {
+                    let vendors = window.navigator.userAgentData.brands;
+                    if (vendors.filter(e => e.brand === 'Google Chrome').length > 0) {
+                        chromeUA = true;
+                    } else {
+                        chromeUA = false;
+                    }
+                }
+
+                const otherChromium = !!(chromeUA || operaUA || edgeUA || braveJS)
+
+                if (otherChromium) { arcFound = false }
+                else {
+                    const htmlStyle = Array.from(document.getElementsByTagName('html')[0].style)
+                    const arcCutoutColorFound = htmlStyle.includes('--arc-palette-cutoutColor')
+                    const arcTitleFound = htmlStyle.includes('--arc-palette-title')
+                    const arcForegroundPrimaryFound = htmlStyle.includes('--arc-palette-foregroundPrimary')
+                    const arcFocusFound = htmlStyle.includes('--arc-palette-focus')
+                    const arcBackgroundExtraFound = htmlStyle.includes('--arc-palette-backgroundExtra')
+                    const arcSubtitleFound = htmlStyle.includes('--arc-palette-subtitle')
+                    const arcMinContrastColorFound = htmlStyle.includes('--arc-palette-minContrastColor')
+                    const arcMaxContrastColorFound = htmlStyle.includes('--arc-palette-maxContrastColor')
+                    const arcForegroundTertiaryFound = htmlStyle.includes('--arc-palette-foregroundTertiary')
+                    const arcBackgroundFound = htmlStyle.includes('--arc-palette-background')
+                    const arcHoverFound = htmlStyle.includes('--arc-palette-hover')
+                    const arcBackgroundSimpleColorFound = htmlStyle.includes('--arc-background-simple-color')
+                    const arcBackgroundGradientColor0Found = htmlStyle.includes('--arc-background-gradient-color0')
+                    const arcBackgroundGradientColor1Found = htmlStyle.includes('--arc-background-gradient-color1')
+                    const arcForegroundSecondaryFound = htmlStyle.includes('--arc-palette-backgroundSecondary')
+                    arcFound = !!window.chrome && (arcCutoutColorFound || arcTitleFound || arcForegroundPrimaryFound || arcFocusFound || arcBackgroundExtraFound || arcSubtitleFound || arcMinContrastColorFound || arcMaxContrastColorFound || arcForegroundTertiaryFound || arcBackgroundFound || arcHoverFound || arcBackgroundSimpleColorFound || arcForegroundSecondaryFound)
+                }
+
+                if (arcFound == true) {
+                    document.getElementById('arc-detection').innerHTML = "Arc has been detected!"
+                    document.getElementById('arc-detection').classList.add('detected')
+                    delete counter;
+                    return true;
+                }
+                else {
+                    if (counter < 5 && !!window.chrome && !otherChromium) setTimeout(detectArc, 250)
+                    else {
+                        document.getElementById('arc-detection').innerHTML = "Arc has not been detected!"
+                        document.getElementById('arc-detection').classList.add('not-detected')
+                        delete counter;
+                        return false;
+                    }
+                }
+            }
+
+            async function detectLittleArc() {
+                let littleArcFound;
+                counter = counter + 1;
+
+                // UA / JavaScript detection to block other major Chromium-based browsers
+                const operaUA = window.navigator.userAgent.indexOf("OPR") > -1 || window.navigator.userAgent.indexOf("Opera") > -1;
+                const edgeUA = window.navigator.userAgent.indexOf("Edg") > -1
+                const braveJS = navigator.brave && navigator.brave.isBrave();
+
+                // Chrome detection is slightly more complicated (but doable!)
+                let chromeUA;
+                if (navigator.userAgentData) {
+                    let vendors = window.navigator.userAgentData.brands;
+                    if (vendors.filter(e => e.brand === 'Google Chrome').length > 0) {
+                        chromeUA = true;
+                    } else {
+                        chromeUA = false;
+                    }
+                }
+
+                const otherChromium = !!(chromeUA || operaUA || edgeUA || braveJS)
+
+                if (otherChromium) { littleArcFound = false }
+                else {
+                    const styleValue = (value) => { return document.getElementsByTagName('html')[0].style.getPropertyValue(value) }
+                    const littleArcCutoutColorMatches = (styleValue('--arc-palette-cutoutColor') == '#212AFBFF')
+                    const littleArcTitleMatches = (styleValue('--arc-palette-title') == '#DCDEFDF4')
+                    const littleArcForegroundPrimaryMatches = (styleValue('--arc-palette-foregroundPrimary') == '#ECEDFEFF')
+                    const littleArcFocusMatches = (styleValue('--arc-palette-focus') == '#4D54FBCE')
+                    const littleArcBackgroundExtraMatches = (styleValue('--arc-palette-backgroundExtra') == '#050727F4')
+                    const littleArcSubtitleMatches = (styleValue('--arc-palette-subtitle') == '#797A82F9')
+                    const littleArcMinContrastColorMatches = (styleValue('--arc-palette-minContrastColor') == '#212AFBFF')
+                    const littleArcMaxContrastColorMatches = (styleValue('--arc-palette-maxContrastColor') == '#ECEDFEFF')
+                    const littleArcForegroundTertiaryMatches = (styleValue('--arc-palette-foregroundTertiary') == '#3139FBFF')
+                    const littleArcBackgroundMatches = (styleValue('--arc-palette-background') == '#0A0D4EF6')
+                    const littleArcHoverMatches = (styleValue('--arc-palette-hover') == '#5D64FB7A')
+                    const littleArcBackgroundGradientColor0Matches = (styleValue('--arc-background-gradient-color0') == '#01021EFF')
+                    const littleArcBackgroundGradientColor1Matches = (styleValue('--arc-background-gradient-color1') == '#17011EFF')
+                    const littleArcForegroundSecondaryMatches = (styleValue('--arc-palette-backgroundSecondary') == '#8489FBFF')
+                    littleArcFound = !!window.chrome && (littleArcCutoutColorMatches || littleArcTitleMatches || littleArcForegroundPrimaryMatches || littleArcFocusMatches || littleArcBackgroundExtraMatches || littleArcSubtitleMatches || littleArcMinContrastColorMatches || littleArcMaxContrastColorMatches || littleArcForegroundTertiaryMatches || littleArcBackgroundMatches || littleArcHoverMatches || littleArcBackgroundGradientColor0Matches || littleArcBackgroundGradientColor1Matches || littleArcForegroundSecondaryMatches)
+                }
+
+                if (littleArcFound == true) {
+                    document.getElementById('little-arc-detection').innerHTML = "Little Arc has been detected!"
+                    document.getElementById('little-arc-detection').classList.add('detected')
+                    delete counter;
+                    return true;
+                }
+                else {
+                    if (counter < 5 && !!window.chrome && !otherChromium) setTimeout(detectLittleArc, 250)
+                    else {
+                    document.getElementById('little-arc-detection').innerHTML = "Little Arc has not been detected!"
+                    document.getElementById('little-arc-detection').classList.add('not-detected')
+                    delete counter;
+                    return false;
+                }
+            }
+        }
+
+        var counter = 0;
+        detectArc()
+        detectLittleArc()
+        </script>
+    </body>
+</html>

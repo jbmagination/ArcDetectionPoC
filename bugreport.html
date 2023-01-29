@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Arc theme data detection</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        :root {
+            color-scheme: light dark;
+        }
+        * {
+            font-family: Helvetica;
+        }
+        .detected {
+            color: red;
+        }
+        .not-detected {
+            color: green;
+        }
+        @media (prefers-color-scheme: dark) {
+            .not-detected {
+                color: lime;
+            }
+        }
+        body {
+            padding-left: 5px;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Arc theme data detection</h1>
+        <p><div id="arc-detection"></noscript></div></p>
+        <script>
+            async function detectArc() {
+                let arcFound;
+                counter = counter + 1;
+
+                const htmlStyle = Array.from(document.getElementsByTagName('html')[0].style)
+                const arcCutoutColorFound = htmlStyle.includes('--arc-palette-cutoutColor')
+                const arcTitleFound = htmlStyle.includes('--arc-palette-title')
+                const arcForegroundPrimaryFound = htmlStyle.includes('--arc-palette-foregroundPrimary')
+                const arcFocusFound = htmlStyle.includes('--arc-palette-focus')
+                const arcBackgroundExtraFound = htmlStyle.includes('--arc-palette-backgroundExtra')
+                const arcSubtitleFound = htmlStyle.includes('--arc-palette-subtitle')
+                const arcMinContrastColorFound = htmlStyle.includes('--arc-palette-minContrastColor')
+                const arcMaxContrastColorFound = htmlStyle.includes('--arc-palette-maxContrastColor')
+                const arcForegroundTertiaryFound = htmlStyle.includes('--arc-palette-foregroundTertiary')
+                const arcBackgroundFound = htmlStyle.includes('--arc-palette-background')
+                const arcHoverFound = htmlStyle.includes('--arc-palette-hover')
+                const arcBackgroundSimpleColorFound = htmlStyle.includes('--arc-background-simple-color')
+                const arcBackgroundGradientColor0Found = htmlStyle.includes('--arc-background-gradient-color0')
+                const arcBackgroundGradientColor1Found = htmlStyle.includes('--arc-background-gradient-color1')
+                const arcForegroundSecondaryFound = htmlStyle.includes('--arc-palette-backgroundSecondary')
+                arcFound = !!window.chrome && (arcCutoutColorFound || arcTitleFound || arcForegroundPrimaryFound || arcFocusFound || arcBackgroundExtraFound || arcSubtitleFound || arcMinContrastColorFound || arcMaxContrastColorFound || arcForegroundTertiaryFound || arcBackgroundFound || arcHoverFound || arcBackgroundSimpleColorFound || arcForegroundSecondaryFound)
+
+                if (arcFound == true) {
+                    document.getElementById('arc-detection').innerHTML = "Arc theme data has been detected!"
+                    document.getElementById('arc-detection').classList.add('detected')
+                    delete counter;
+                    return true;
+                }
+                else {
+                    if (counter < 5 && !!window.chrome) setTimeout(detectArc, 250)
+                    else {
+                        document.getElementById('arc-detection').innerHTML = "Arc theme data has not been detected!"
+                        document.getElementById('arc-detection').classList.add('not-detected')
+                        delete counter;
+                        return false;
+                    }
+                }
+            }
+
+        var counter = 0;
+        detectArc()
+        </script>
+    </body>
+</html>

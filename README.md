@@ -1,0 +1,2 @@
+# Arc browser detection
+Arc has a setting under *Advanced* > *Allow website to get your theme data*. This setting is on by default. I use it to detect Arc ([see the website](https://jbmagination.com/ArcDetectionPoC)).
