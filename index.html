@@ -67,22 +67,26 @@
                 if (otherChromium) { arcFound = false }
                 else {
                     const htmlStyle = Array.from(document.getElementsByTagName('html')[0].style)
+                    const arcForegroundPrimaryFound = htmlStyle.includes('--arc-palette-foregroundPrimary')
+                    const arcForegroundSecondaryFound = htmlStyle.includes('--arc-palette-backgroundSecondary')
+                    const arcForegroundTertiaryFound = htmlStyle.includes('--arc-palette-foregroundTertiary')
+                    const arcMaxContrastColorFound = htmlStyle.includes('--arc-palette-maxContrastColor')
+                    const arcMinContrastColorFound = htmlStyle.includes('--arc-palette-minContrastColor')
+                    const arcBackgroundExtraFound = htmlStyle.includes('--arc-palette-backgroundExtra')
+                    const arcBackgroundFound = htmlStyle.includes('--arc-palette-background')
+                    const arcFocusFound = htmlStyle.includes('--arc-palette-focus')
+                    const arcHoverFound = htmlStyle.includes('--arc-palette-hover')
                     const arcCutoutColorFound = htmlStyle.includes('--arc-palette-cutoutColor')
                     const arcTitleFound = htmlStyle.includes('--arc-palette-title')
-                    const arcForegroundPrimaryFound = htmlStyle.includes('--arc-palette-foregroundPrimary')
-                    const arcFocusFound = htmlStyle.includes('--arc-palette-focus')
-                    const arcBackgroundExtraFound = htmlStyle.includes('--arc-palette-backgroundExtra')
                     const arcSubtitleFound = htmlStyle.includes('--arc-palette-subtitle')
-                    const arcMinContrastColorFound = htmlStyle.includes('--arc-palette-minContrastColor')
-                    const arcMaxContrastColorFound = htmlStyle.includes('--arc-palette-maxContrastColor')
-                    const arcForegroundTertiaryFound = htmlStyle.includes('--arc-palette-foregroundTertiary')
-                    const arcBackgroundFound = htmlStyle.includes('--arc-palette-background')
-                    const arcHoverFound = htmlStyle.includes('--arc-palette-hover')
                     const arcBackgroundSimpleColorFound = htmlStyle.includes('--arc-background-simple-color')
                     const arcBackgroundGradientColor0Found = htmlStyle.includes('--arc-background-gradient-color0')
                     const arcBackgroundGradientColor1Found = htmlStyle.includes('--arc-background-gradient-color1')
-                    const arcForegroundSecondaryFound = htmlStyle.includes('--arc-palette-backgroundSecondary')
-                    arcFound = !!window.chrome && (arcCutoutColorFound || arcTitleFound || arcForegroundPrimaryFound || arcFocusFound || arcBackgroundExtraFound || arcSubtitleFound || arcMinContrastColorFound || arcMaxContrastColorFound || arcForegroundTertiaryFound || arcBackgroundFound || arcHoverFound || arcBackgroundSimpleColorFound || arcForegroundSecondaryFound)
+                    const arcBackgroundGradientColor2Found = htmlStyle.includes('--arc-background-gradient-color2')
+                    const arcBackgroundGradientOverlayColor0Found = htmlStyle.includes('--arc-background-gradient-overlay-color0')
+                    const arcBackgroundGradientOverlayColor1Found = htmlStyle.includes('--arc-background-gradient-overlay-color1')
+                    const arcBackgroundGradientOverlayColor2Found = htmlStyle.includes('--arc-background-gradient-overlay-color2')
+                    arcFound = !!window.chrome && (arcForegroundPrimaryFound || arcForegroundSecondaryFound || arcForegroundTertiaryFound || arcMinContrastColorFound || arcMaxContrastColorFound || arcBackgroundExtraFound || arcBackgroundFound || arcFocusFound || arcHoverFound || arcCutoutColorFound || arcTitleFound || arcSubtitleFound || arcBackgroundSimpleColorFound || arcBackgroundGradientColor0Found || arcBackgroundGradientColor1Found || arcBackgroundGradientColor2Found || arcBackgroundGradientOverlayColor0Found || arcBackgroundGradientOverlayColor1Found || arcBackgroundGradientOverlayColor2Found)
                 }
 
                 if (arcFound == true) {
@@ -127,21 +131,21 @@
                 if (otherChromium) { littleArcFound = false }
                 else {
                     const styleValue = (value) => { return document.getElementsByTagName('html')[0].style.getPropertyValue(value) }
+                    const littleArcForegroundPrimaryMatches = (styleValue('--arc-palette-foregroundPrimary') == '#ECEDFEFF')
+                    const littleArcForegroundSecondaryMatches = (styleValue('--arc-palette-backgroundSecondary') == '#8489FBFF')
+                    const littleArcForegroundTertiaryMatches = (styleValue('--arc-palette-foregroundTertiary') == '#3139FBFF')
+                    const littleArcMaxContrastColorMatches = (styleValue('--arc-palette-maxContrastColor') == '#ECEDFEFF')
+                    const littleArcMinContrastColorMatches = (styleValue('--arc-palette-minContrastColor') == '#212AFBFF')
+                    const littleArcBackgroundExtraMatches = (styleValue('--arc-palette-backgroundExtra') == '#050727F4')
+                    const littleArcBackgroundMatches = (styleValue('--arc-palette-background') == '#0A0D4EF6')
+                    const littleArcFocusMatches = (styleValue('--arc-palette-focus') == '#4D54FBCE')
+                    const littleArcHoverMatches = (styleValue('--arc-palette-hover') == '#5D64FB7A')
                     const littleArcCutoutColorMatches = (styleValue('--arc-palette-cutoutColor') == '#212AFBFF')
                     const littleArcTitleMatches = (styleValue('--arc-palette-title') == '#DCDEFDF4')
-                    const littleArcForegroundPrimaryMatches = (styleValue('--arc-palette-foregroundPrimary') == '#ECEDFEFF')
-                    const littleArcFocusMatches = (styleValue('--arc-palette-focus') == '#4D54FBCE')
-                    const littleArcBackgroundExtraMatches = (styleValue('--arc-palette-backgroundExtra') == '#050727F4')
                     const littleArcSubtitleMatches = (styleValue('--arc-palette-subtitle') == '#797A82F9')
-                    const littleArcMinContrastColorMatches = (styleValue('--arc-palette-minContrastColor') == '#212AFBFF')
-                    const littleArcMaxContrastColorMatches = (styleValue('--arc-palette-maxContrastColor') == '#ECEDFEFF')
-                    const littleArcForegroundTertiaryMatches = (styleValue('--arc-palette-foregroundTertiary') == '#3139FBFF')
-                    const littleArcBackgroundMatches = (styleValue('--arc-palette-background') == '#0A0D4EF6')
-                    const littleArcHoverMatches = (styleValue('--arc-palette-hover') == '#5D64FB7A')
                     const littleArcBackgroundGradientColor0Matches = (styleValue('--arc-background-gradient-color0') == '#01021EFF')
                     const littleArcBackgroundGradientColor1Matches = (styleValue('--arc-background-gradient-color1') == '#17011EFF')
-                    const littleArcForegroundSecondaryMatches = (styleValue('--arc-palette-backgroundSecondary') == '#8489FBFF')
-                    littleArcFound = !!window.chrome && (littleArcCutoutColorMatches || littleArcTitleMatches || littleArcForegroundPrimaryMatches || littleArcFocusMatches || littleArcBackgroundExtraMatches || littleArcSubtitleMatches || littleArcMinContrastColorMatches || littleArcMaxContrastColorMatches || littleArcForegroundTertiaryMatches || littleArcBackgroundMatches || littleArcHoverMatches || littleArcBackgroundGradientColor0Matches || littleArcBackgroundGradientColor1Matches || littleArcForegroundSecondaryMatches)
+                    littleArcFound = !!window.chrome && (littleArcForegroundPrimaryMatches || littleArcForegroundSecondaryMatches || littleArcForegroundTertiaryMatches || littleArcMaxContrastColorMatches || littleArcMinContrastColorMatches || littleArcBackgroundExtraMatches || littleArcBackgroundMatches || littleArcFocusMatches || littleArcHoverMatches || littleArcCutoutColorMatches || littleArcTitleMatches || littleArcSubtitleMatches || littleArcBackgroundGradientColor0Matches || littleArcBackgroundGradientColor1Matches)
                 }
 
                 if (littleArcFound == true) {
